@@ -18,9 +18,10 @@ while 1
     data = reshape(data, Ly, Lx, []);
     
     % ignore bad frames
-    badi = ops.badframes(ix + [1:size(data,3)]);
-%     data(:,:, badi) = [];
-    
+    if ~isempty(ops.badframes) %added by NX to circumvent indexing empty badframes
+        badi = ops.badframes(ix + [1:size(data,3)]);
+%         data(:,:, badi) = [];
+    end
     % subtract off the mean of this batch
     if nargin<=5
         data = bsxfun(@minus, data, mean(data,3));
