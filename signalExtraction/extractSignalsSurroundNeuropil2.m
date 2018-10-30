@@ -83,22 +83,24 @@ end
 fclose(fid);
 
 %% get z drift
-cFt = my_conv2(cF,.5, 2); 
-sFt = my_conv2(sF,.5, 2); 
+if getOr(ops, 'getZdrift', 0)
+    cFt = my_conv2(cF,.5, 2); 
+    sFt = my_conv2(sF,.5, 2); 
 
-cFt = ordfilt2(cFt,1, true(1,100),[], 'symmetric'); 
-sFt = ordfilt2(sFt,1, true(1,100),[], 'symmetric'); 
+    cFt = ordfilt2(cFt,1, true(1,100),[], 'symmetric'); 
+    sFt = ordfilt2(sFt,1, true(1,100),[], 'symmetric'); 
 
-ratCS = log(max(1e-4,cFt )) - log(max(1e-4,sFt));
-ratCS = zscore(ratCS, 1, 2);
+    ratCS = log(max(1e-4,cFt )) - log(max(1e-4,sFt));
+    ratCS = zscore(ratCS, 1, 2);
 
-[u, s, v] = svdecon(ratCS);
+    [u, s, v] = svdecon(ratCS);
 
-ops.zdrift = v(:,1);
+    ops.zdrift = v(:,1);
 
-figure(10)
-plot(v(:,1))
-hold all
+    figure(10)
+    plot(v(:,1))
+    hold all
+end
 
 %%
 % keyboard;
